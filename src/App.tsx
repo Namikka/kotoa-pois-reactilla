@@ -5,7 +5,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import * as xml2js from 'xml2js';
 import { stripPrefix } from 'xml2js/lib/processors';
 import * as _ from "lodash";
-import { BsWsfElement } from './models/bsWfsElement';
+ import { BsWsfElement } from './models/bsWfsElement';
 
 
 const kelloNyt = new Date();
