@@ -4,7 +4,7 @@ import ForecastModel from './models/forecastModel';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import * as xml2js from 'xml2js';
 import { stripPrefix } from 'xml2js/lib/processors';
-import * as _ from "lodash";
+// import * as _ from "lodash";
 import { BsWsfElement } from './models/bsWfsElement';
 import "./index.scss";
 
@@ -20,11 +20,12 @@ const place: string = "place=Helsinki&"
 const ennusteFMIParameters: string = "parameters=Precipitation1h,Temperature,WindDirection,WindSpeedMS,WindGust,WeatherSymbol3&";
 const ennusteBaseURL: string = "http://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::hirlam::surface::point::simple&";
 
+// eslint-disable-next-line no-useless-escape
 const forecastBreakPointIndex = ennusteFMIParameters.match(/(\,|\&)/g)?.length || 5;
 
 
 const WeatherForeCastElement: React.FC<{forecast:ForecastModel}> = ({forecast}) => (
-  <div>
+  <div className="weatherStatus">
     <span>{forecast.Time}</span><br/>
     <span>{forecast.Temperature} c</span><br/>
     <span>{forecast.WeatherSymbol3}</span><br/>
@@ -48,7 +49,6 @@ function App() {
       return;
     }
     setForecastProcessStatus("loading");
-    console.debug("API CALL");
     axios.get(forecastURLString).then((forecastRequestResponse:AxiosResponse) => {
       const forecastResults:string = forecastRequestResponse.data;
       xml2js.parseString(forecastResults, {
@@ -66,9 +66,6 @@ function App() {
           result.FeatureCollection.member.forEach((value: any, i: number, wholeList:Array<any>) => {            
             const forecastData: BsWsfElement = value.BsWfsElement[0];
             forecastForAnHourObject = (i % forecastBreakPointIndex === 0) ? new ForecastModel() : forecastForAnHourObject;
-
-            // TODO: Reasearch if this line could replace the whole switch case thingie
-            // forecastForAnHourObject[forecastData.ParameterName[0]] = forecastData.ParameterValue[0]
 
             switch(forecastData.ParameterName[0]) {
               case "Precipitation1h":
@@ -109,13 +106,13 @@ function App() {
   },[forecastURLString, weatherDataList, timeParameters]);
 
   return (
-    <div className="App">
+    <div className="kotoapois">
       {(errored !== "") ?       
         <h1>Ennusteen haussa virhe :(</h1>        
         :        
         <>
           <div>Ennusteiden hakutilanne {forecastProcessingStatus}</div><br />
-          <div>
+          <div className="weatherStatusData">
             {(forecastProcessingStatus === "processed") &&
               weatherDataList.map((forecastItem: ForecastModel, i:number) => <WeatherForeCastElement forecast={forecastItem} key={i} /> )              
             }
