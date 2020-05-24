@@ -12,7 +12,7 @@ const kelloNyt = new Date();
 
 // TODO: Daylight savings, should we add it or just IDGAF?
 const startTime: string = new Date(kelloNyt.getFullYear(), kelloNyt.getMonth(), kelloNyt.getDate(), kelloNyt.getHours()).toISOString() + "&";
-const stopTime: string = new Date(kelloNyt.getFullYear(), kelloNyt.getMonth(), kelloNyt.getDate(), kelloNyt.getHours() + 1).toISOString() + "&";
+const stopTime: string = new Date(kelloNyt.getFullYear(), kelloNyt.getMonth(), kelloNyt.getDate(), kelloNyt.getHours() + 6).toISOString() + "&";
 
 
 // Everything is strings even though some values should be numbers but let's not get that gritty yet.
@@ -24,7 +24,6 @@ const forecastBreakPointIndex = ennusteFMIParameters.match(/(\,|\&)/g)?.length |
 
 
 const WeatherForeCastElement: React.FC<{forecast:ForecastModel}> = ({forecast}) => (
-
   <div>
     <span>{forecast.Time}</span><br/>
     <span>{forecast.Temperature} c</span><br/>
@@ -119,7 +118,7 @@ function App() {
           <div>Ennusteiden hakutilanne {forecastProcessingStatus}</div><br />
           <div>
             {(forecastProcessingStatus === "processed") &&
-              <WeatherForeCastElement forecast={weatherDataList[0]} />
+              weatherDataList.map((forecastItem: ForecastModel, i:number) => <WeatherForeCastElement forecast={forecastItem} key={i} /> )              
             }
           </div>
         </>
