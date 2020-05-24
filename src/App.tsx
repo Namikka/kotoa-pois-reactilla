@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import ForecastModel from './models/forecastModel';
 import axios, { AxiosError, AxiosResponse } from 'axios';
@@ -21,17 +21,15 @@ const ennusteFMIParameters: string = "parameters=Precipitation1h,Temperature,Win
 const ennusteBaseURL: string = "http://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::hirlam::surface::point::simple&";
 
 const forecastBreakPointIndex = ennusteFMIParameters.match(/(\,|\&)/g)?.length || 5;
-// const WeatherForeCastElement:  React.FunctionComponent<{ forecast: ForecastModel }> = ({ forecast }) => (
-//   <div>
-//     Lämpötila: {forecast.Temperature},<br/> 
-//     Aika: {forecast.Time},<br/> 
-//     Tuulen suunta: {forecast.WindDirection},<br/> 
-//     Tuulen nopeus: {forecast.WindSpeedMS},<br/> 
-//   </div>
-// );
 
-const devElementThingie: React.FC<{ one: "", two: "", three: ""  }> = ({ one, two, three }) => (
-  <p>one: {one}, two: {two}, three {three} </p>
+
+const WeatherForeCastElement: React.FC<{forecast:ForecastModel}> = ({forecast}) => (
+
+  <div>
+    <span>{forecast.Time}</span><br/>
+    <span>{forecast.Temperature} c</span><br/>
+    <span>{forecast.WeatherSymbol3}</span><br/>
+  </div>
 );
 
 
@@ -40,19 +38,20 @@ function App() {
   const [weatherDataList, setWeatherDataList] = useState([] as Array<ForecastModel>);
   const [forecastProcessingStatus, setForecastProcessStatus] = useState("init" as string);
   const [resultParameterNames, setResultParameterNames] = useState([] as Array<string>);
-  // And a breakPointString to show where the breakpoint is, using string OR undefined because the _.last returns those values
-  const [rowBreakPoint, setrowBreakPoint] = useState("");
-  const [info, setInfo] = useState(null);
-  const ennusteUrlString = ennusteBaseURL + place + "starttime=" + startTime + "endtime=" + stopTime + ennusteFMIParameters;
-  
-  const getWeatherForecasts = function(forecastString: string) {
-    if (forecastString.length < 1) {
+  const [forecastURLString, setForecastURLString] = useState("");
+  const [timeParameters, setTimeParameters] = useState({start:startTime, stop:stopTime});
+
+  useEffect(() => {
+    const ennusteUrlString = ennusteBaseURL + place + "starttime=" + timeParameters.start + "endtime=" + timeParameters.stop + ennusteFMIParameters;
+    setForecastURLString(ennusteUrlString);
+    if (forecastURLString.length < 1) {
       setForecastProcessStatus("failed");
       setErroredStatus("EnnusteStringi olematon :(");
       return;
     }
     setForecastProcessStatus("loading");
-    axios.get(forecastString).then((forecastRequestResponse:AxiosResponse) => {
+    console.debug("API CALL");
+    axios.get(forecastURLString).then((forecastRequestResponse:AxiosResponse) => {
       const forecastResults:string = forecastRequestResponse.data;
       xml2js.parseString(forecastResults, {
         tagNameProcessors: [stripPrefix],
@@ -108,20 +107,23 @@ function App() {
     }).catch((error: AxiosError) => {
       console.error("Sää ennusteen haku epäonnistui koska ", error);
       setErroredStatus("Sää ennusteen haku epäonnistui");
-    })
-  };
-  if (forecastProcessingStatus === "init") {
-    getWeatherForecasts(ennusteUrlString);
-  }
+    });    
+  },[forecastURLString, weatherDataList]);
+
   return (
     <div className="App">
       {(errored !== "") ?       
         <h1>Ennusteen haussa virhe :(</h1>        
         :        
         <>
-          <div>Ennusteita haetaan...</div><br />
-          <code>{forecastProcessingStatus}</code>
+          <div>Ennusteiden hakutilanne {forecastProcessingStatus}</div><br />
+          <div>
+            {(forecastProcessingStatus === "processed") &&
+              <WeatherForeCastElement forecast={weatherDataList[0]} />
+            }
+          </div>
         </>
+        
       }
     </div>
   );
