@@ -5,8 +5,8 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import * as xml2js from 'xml2js';
 import { stripPrefix } from 'xml2js/lib/processors';
 import * as _ from "lodash";
- import { BsWsfElement } from './models/bsWfsElement';
-
+import { BsWsfElement } from './models/bsWfsElement';
+import "./index.scss";
 
 const kelloNyt = new Date();
 
@@ -36,7 +36,6 @@ function App() {
   const [errored, setErroredStatus] = useState(false||"");
   const [weatherDataList, setWeatherDataList] = useState([] as Array<ForecastModel>);
   const [forecastProcessingStatus, setForecastProcessStatus] = useState("init" as string);
-  const [resultParameterNames, setResultParameterNames] = useState([] as Array<string>);
   const [forecastURLString, setForecastURLString] = useState("");
   const [timeParameters, setTimeParameters] = useState({start:startTime, stop:stopTime});
 
@@ -107,7 +106,7 @@ function App() {
       console.error("Sää ennusteen haku epäonnistui koska ", error);
       setErroredStatus("Sää ennusteen haku epäonnistui");
     });    
-  },[forecastURLString, weatherDataList]);
+  },[forecastURLString, weatherDataList, timeParameters]);
 
   return (
     <div className="App">
