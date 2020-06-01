@@ -7,7 +7,12 @@ import { stripPrefix } from 'xml2js/lib/processors';
 // import * as _ from "lodash";
 import { BsWsfElement } from './models/bsWfsElement';
 import "./index.scss";
-
+import forecastObjectHandler from './forecastHandler';
+type Badge = {
+  name: string;
+  level: string;
+  type: string;
+};
 const kelloNyt = new Date();
 
 // TODO: Daylight savings, should we add it or just IDGAF?
@@ -29,9 +34,13 @@ const WeatherForeCastElement: React.FC<{forecast:ForecastModel}> = ({forecast}) 
     <span>{forecast.Time}</span><br/>
     <span>{forecast.Temperature} c</span><br/>
     <span>{forecast.WeatherSymbol3}</span><br/>
+    {forecast.BadgeList.map((badge: any) => {
+      return (
+      <span>{badge.name}</span>
+      )
+    })}
   </div>
 );
-
 
 function App() {
   const [errored, setErroredStatus] = useState(false||"");
@@ -66,7 +75,6 @@ function App() {
           result.FeatureCollection.member.forEach((value: any, i: number, wholeList:Array<any>) => {            
             const forecastData: BsWsfElement = value.BsWfsElement[0];
             forecastForAnHourObject = (i % forecastBreakPointIndex === 0) ? new ForecastModel() : forecastForAnHourObject;
-
             switch(forecastData.ParameterName[0]) {
               case "Precipitation1h":
                 forecastForAnHourObject.Rain = parseFloat(forecastData.ParameterValue[0]);
@@ -88,8 +96,6 @@ function App() {
                 break;
             }
             if (i > 0 && i % forecastBreakPointIndex === 0) {
-              // console.log("weatherDataList.push when i is ", i);
-              // console.log("weatherDataList.length = ", weatherDataList.length);
               forecastForAnHourObject.Time = forecastData.Time[0];          
               weatherDataList.push(forecastForAnHourObject);
             }
@@ -97,6 +103,14 @@ function App() {
         }
       });
     }).then(() => {
+      // Then we add the badges, which is not written using react for now
+      const badgedWeatherDatalist = forecastObjectHandler(weatherDataList);
+      if (badgedWeatherDatalist === null) {
+        return weatherDataList;
+      } else {
+        return badgedWeatherDatalist;
+      }
+    }).then((handledWeatherDataList: ForecastModel[]) => {
       setForecastProcessStatus("processed");
       setWeatherDataList(weatherDataList);
     }).catch((error: AxiosError) => {
