@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import ForecastModel from './models/forecastModel';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import * as xml2js from 'xml2js';
 import { stripPrefix } from 'xml2js/lib/processors';
-// import * as _ from "lodash";
+import Badge from 'react-bootstrap/Badge'
 import { BsWsfElement } from './models/bsWfsElement';
 import "./index.scss";
 import forecastObjectHandler from './forecastHandler';
-type Badge = {
+type InfoBadge = {
   name: string;
   level: string;
   type: string;
@@ -29,18 +30,32 @@ const ennusteBaseURL: string = "http://opendata.fmi.fi/wfs?service=WFS&version=2
 const forecastBreakPointIndex = ennusteFMIParameters.match(/(\,|\&)/g)?.length || 5;
 
 
-const WeatherForeCastElement: React.FC<{forecast:ForecastModel}> = ({forecast}) => (
-  <div className="weatherStatus">
-    <span>{forecast.Time}</span><br/>
-    <span>{forecast.Temperature} c</span><br/>
-    <span>{forecast.WeatherSymbol3}</span><br/>
-    {forecast.BadgeList.map((badge: any) => {
-      return (
-      <span>{badge.name}</span>
-      )
-    })}
-  </div>
-);
+const WeatherForeCastElement: React.FC<{forecast:ForecastModel}> = ({forecast}) => {
+  // The slice is for getting rid of the seconds since we don't need them.
+  const timeString = new Date(forecast.Time).toLocaleTimeString().slice(0, -3);
+  console.log(forecast.BadgeList.length);
+  const badgeElements = forecast.BadgeList.map((badge:any, badgeNumber:number) => {
+    return <Badge key={badgeNumber} variant={badge.level}>{badge.name}</Badge>; 
+  });
+  const roundedTemperature = Math.ceil(parseFloat(forecast.Temperature)).toString();
+  return (
+    <div className="weatherStatus">
+        <div className="weatherIconContainer">          
+          <span>{forecast.WeatherSymbol3}</span><br/>
+        </div>
+        <div className='weatherInfo'>
+						<p>
+							Kello <strong>{timeString}</strong>
+							lämpötila on <strong>{roundedTemperature}&deg;c</strong>
+						</p>
+					</div>
+        <div className="weatherBadges">
+          {badgeElements}
+
+        </div>
+      </div>
+    )
+}
 
 function App() {
   const [errored, setErroredStatus] = useState(false||"");
