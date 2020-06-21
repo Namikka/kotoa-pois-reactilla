@@ -1,25 +1,30 @@
-import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import "./index.scss";
+import React, { useState, useEffect } from 'react';
 import ForecastModel from './models/forecastModel';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import * as xml2js from 'xml2js';
 import { stripPrefix } from 'xml2js/lib/processors';
 import Badge from 'react-bootstrap/Badge'
 import { BsWsfElement } from './models/bsWfsElement';
-import "./index.scss";
 import forecastObjectHandler from './forecastHandler';
+import * as WeatherIvons from "./components/weatherIcons";
+
+
 type InfoBadge = {
   name: string;
   level: string;
   type: string;
 };
+
+// https://www.robinwieruch.de/react-svg-icon-components maybe this helps with the svg loadings...
+
 const kelloNyt = new Date();
 
 // TODO: Daylight savings, should we add it or just IDGAF?
 const startTime: string = new Date(kelloNyt.getFullYear(), kelloNyt.getMonth(), kelloNyt.getDate(), kelloNyt.getHours()).toISOString() + "&";
 const stopTime: string = new Date(kelloNyt.getFullYear(), kelloNyt.getMonth(), kelloNyt.getDate(), kelloNyt.getHours() + 6).toISOString() + "&";
-
 
 // Everything is strings even though some values should be numbers but let's not get that gritty yet.
 const place: string = "place=Helsinki&"
@@ -30,23 +35,25 @@ const ennusteBaseURL: string = "http://opendata.fmi.fi/wfs?service=WFS&version=2
 const forecastBreakPointIndex = ennusteFMIParameters.match(/(\,|\&)/g)?.length || 5;
 
 
+
 const WeatherForeCastElement: React.FC<{forecast:ForecastModel}> = ({forecast}) => {
   // The slice is for getting rid of the seconds since we don't need them.
   const timeString = new Date(forecast.Time).toLocaleTimeString().slice(0, -3);
-  console.log(forecast.BadgeList.length);
   const badgeElements = forecast.BadgeList.map((badge:any, badgeNumber:number) => {
     return <Badge key={badgeNumber} variant={badge.level}>{badge.name}</Badge>; 
   });
   const roundedTemperature = Math.ceil(parseFloat(forecast.Temperature)).toString();
+  const foo = "SVG2";
+  const ikoni = Object.keys(WeatherIvons).indexOf(foo);
   return (
     <div className="weatherStatus">
-        <div className="weatherIconContainer">          
+        <div className="weatherIconContainer">
           <span>{forecast.WeatherSymbol3}</span><br/>
+          {ikoni}
         </div>
         <div className='weatherInfo'>
 						<p>
-							Kello <strong>{timeString}</strong>
-							lämpötila on <strong>{roundedTemperature}&deg;c</strong>
+							Kello <strong>{timeString}</strong> lämpötila on <strong>{roundedTemperature}&deg;c</strong>
 						</p>
 					</div>
         <div className="weatherBadges">

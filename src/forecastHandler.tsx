@@ -68,7 +68,6 @@ function forecastObjectHandler(weatherDataList: Array<ForecastModel>): Array<For
         if (rainAmount > 6) {
             badgeArray.push({ name: "VITUSTI VETTÄ", level: "danger", type: "rain"  });
         }
-        console.log("badgeArray: ", badgeArray);
         forecast.BadgeList = badgeArray;
         // Then custom badges for slush and stuff.
         return forecast;
