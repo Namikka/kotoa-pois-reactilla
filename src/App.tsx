@@ -32,7 +32,7 @@ const startTime: string = new Date(kelloNyt.getFullYear(), kelloNyt.getMonth(), 
 const stopTime: string = new Date(kelloNyt.getFullYear(), kelloNyt.getMonth(), kelloNyt.getDate(), kelloNyt.getHours() + 6).toISOString() + "&";
 
 // Everything is strings even though some values should be numbers but let's not get that gritty yet.
-const place: string = "place=Helsinki&"
+const place: string = "geoid=843438&";
 const ennusteFMIParameters: string = "parameters=Precipitation1h,Temperature,WindDirection,WindSpeedMS,WindGust,WeatherSymbol3&";
 const ennusteBaseURL: string = "http://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::hirlam::surface::point::simple&";
 
