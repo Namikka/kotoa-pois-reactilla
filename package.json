@@ -45,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "@svgr/cli": "^5.4.0",
     "css-loader": "^3.5.3",
     "less": "^3.11.1",
     "less-loader": "^6.1.0",

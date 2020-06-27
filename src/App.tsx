@@ -9,7 +9,6 @@ import { stripPrefix } from 'xml2js/lib/processors';
 import Badge from 'react-bootstrap/Badge'
 import { BsWsfElement } from './models/bsWfsElement';
 import forecastObjectHandler from './forecastHandler';
-import * as WeatherIvons from "./components/weatherIcons";
 
 
 type InfoBadge = {
@@ -18,7 +17,6 @@ type InfoBadge = {
   type: string;
 };
 
-// https://www.robinwieruch.de/react-svg-icon-components maybe this helps with the svg loadings...
 
 const kelloNyt = new Date();
 
@@ -39,17 +37,17 @@ const forecastBreakPointIndex = ennusteFMIParameters.match(/(\,|\&)/g)?.length |
 const WeatherForeCastElement: React.FC<{forecast:ForecastModel}> = ({forecast}) => {
   // The slice is for getting rid of the seconds since we don't need them.
   const timeString = new Date(forecast.Time).toLocaleTimeString().slice(0, -3);
+  console.log("forecast.WeatherSymbol3: ", forecast.WeatherSymbol3);
+  const weatherIconSrc = process.env.PUBLIC_URL + "/weatherIcons/"+forecast.WeatherSymbol3+".svg";
+  // TODO: Create & Add weatherSymbol alternative texts.
   const badgeElements = forecast.BadgeList.map((badge:any, badgeNumber:number) => {
     return <Badge key={badgeNumber} variant={badge.level}>{badge.name}</Badge>; 
   });
   const roundedTemperature = Math.ceil(parseFloat(forecast.Temperature)).toString();
-  const foo = "SVG2";
-  const ikoni = Object.keys(WeatherIvons).indexOf(foo);
   return (
     <div className="weatherStatus">
         <div className="weatherIconContainer">
-          <span>{forecast.WeatherSymbol3}</span><br/>
-          {ikoni}
+          <img className="weatherIcon" alt="!" src={weatherIconSrc}></img>
         </div>
         <div className='weatherInfo'>
 						<p>
@@ -114,7 +112,7 @@ function App() {
                 forecastForAnHourObject.WindGust = forecastData.ParameterValue[0];
                 break;
               case "WeatherSymbol3":
-                forecastForAnHourObject.WeatherSymbol3 = forecastData.ParameterValue[0];
+                forecastForAnHourObject.WeatherSymbol3 = forecastData.ParameterValue[0].slice(0,-2);
                 break;
             }
             if (i > 0 && i % forecastBreakPointIndex === 0) {
