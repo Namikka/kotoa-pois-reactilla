@@ -9,7 +9,7 @@ import { stripPrefix } from 'xml2js/lib/processors';
 import Badge from 'react-bootstrap/Badge'
 import { BsWsfElement } from './models/bsWfsElement';
 import forecastObjectHandler from './forecastHandler';
-
+import { WeatherIconDescriptions } from './components/weatherIconDescriptions';
 
 type InfoBadge = {
   name: string;
@@ -17,6 +17,13 @@ type InfoBadge = {
   type: string;
 };
 
+// I don't know what I'm doing but sure af I try
+// type WeatherDescription = { description: string; };
+// interface WeatherIconDescription {
+//   [key: string]: WeatherDescription;
+// }
+
+// let weatherDescriptionList = WeatherIconDescriptions as WeatherIconDescription;
 
 const kelloNyt = new Date();
 
@@ -37,9 +44,7 @@ const forecastBreakPointIndex = ennusteFMIParameters.match(/(\,|\&)/g)?.length |
 const WeatherForeCastElement: React.FC<{forecast:ForecastModel}> = ({forecast}) => {
   // The slice is for getting rid of the seconds since we don't need them.
   const timeString = new Date(forecast.Time).toLocaleTimeString().slice(0, -3);
-  console.log("forecast.WeatherSymbol3: ", forecast.WeatherSymbol3);
   const weatherIconSrc = process.env.PUBLIC_URL + "/weatherIcons/"+forecast.WeatherSymbol3+".svg";
-  // TODO: Create & Add weatherSymbol alternative texts.
   const badgeElements = forecast.BadgeList.map((badge:any, badgeNumber:number) => {
     return <Badge key={badgeNumber} variant={badge.level}>{badge.name}</Badge>; 
   });
@@ -47,7 +52,7 @@ const WeatherForeCastElement: React.FC<{forecast:ForecastModel}> = ({forecast}) 
   return (
     <div className="weatherStatus">
         <div className="weatherIconContainer">
-          <img className="weatherIcon" alt="!" src={weatherIconSrc}></img>
+          <img className="weatherIcon" alt={WeatherIconDescriptions[forecast.WeatherSymbol3]} src={weatherIconSrc}></img>
         </div>
         <div className='weatherInfo'>
 						<p>
@@ -56,7 +61,6 @@ const WeatherForeCastElement: React.FC<{forecast:ForecastModel}> = ({forecast}) 
 					</div>
         <div className="weatherBadges">
           {badgeElements}
-
         </div>
       </div>
     )
