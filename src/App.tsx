@@ -11,20 +11,6 @@ import { BsWsfElement } from './models/bsWfsElement';
 import forecastObjectHandler from './forecastHandler';
 import { WeatherIconDescriptions } from './components/weatherIconDescriptions';
 
-type InfoBadge = {
-  name: string;
-  level: string;
-  type: string;
-};
-
-// I don't know what I'm doing but sure af I try
-// type WeatherDescription = { description: string; };
-// interface WeatherIconDescription {
-//   [key: string]: WeatherDescription;
-// }
-
-// let weatherDescriptionList = WeatherIconDescriptions as WeatherIconDescription;
-
 const kelloNyt = new Date();
 
 // TODO: Daylight savings, should we add it or just IDGAF?
@@ -35,11 +21,7 @@ const stopTime: string = new Date(kelloNyt.getFullYear(), kelloNyt.getMonth(), k
 const place: string = "geoid=843438&";
 const ennusteFMIParameters: string = "parameters=Precipitation1h,Temperature,WindDirection,WindSpeedMS,WindGust,WeatherSymbol3&";
 const ennusteBaseURL: string = "http://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::hirlam::surface::point::simple&";
-
-// eslint-disable-next-line no-useless-escape
 const forecastBreakPointIndex = ennusteFMIParameters.match(/(\,|\&)/g)?.length || 5;
-
-
 
 const WeatherForeCastElement: React.FC<{forecast:ForecastModel}> = ({forecast}) => {
   // The slice is for getting rid of the seconds since we don't need them.
@@ -127,13 +109,8 @@ function App() {
         }
       });
     }).then(() => {
-      // Then we add the badges, which is not written using react for now
       const badgedWeatherDatalist = forecastObjectHandler(weatherDataList);
-      if (badgedWeatherDatalist === null) {
-        return weatherDataList;
-      } else {
-        return badgedWeatherDatalist;
-      }
+      return (badgedWeatherDatalist === null) ? weatherDataList : badgedWeatherDatalist;
     }).then((handledWeatherDataList: ForecastModel[]) => {
       setForecastProcessStatus("processed");
       setWeatherDataList(weatherDataList);
@@ -155,8 +132,7 @@ function App() {
               weatherDataList.map((forecastItem: ForecastModel, i:number) => <WeatherForeCastElement forecast={forecastItem} key={i} /> )              
             }
           </div>
-        </>
-        
+        </>        
       }
     </div>
   );
