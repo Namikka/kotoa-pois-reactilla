@@ -21,6 +21,7 @@ const stopTime: string = new Date(kelloNyt.getFullYear(), kelloNyt.getMonth(), k
 const place: string = "geoid=843438&";
 const ennusteFMIParameters: string = "parameters=Precipitation1h,Temperature,WindDirection,WindSpeedMS,WindGust,WeatherSymbol3&";
 const ennusteBaseURL: string = "http://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::hirlam::surface::point::simple&";
+// eslint-disable-next-line no-useless-escape
 const forecastBreakPointIndex = ennusteFMIParameters.match(/(\,|\&)/g)?.length || 5;
 
 const WeatherForeCastElement: React.FC<{forecast:ForecastModel}> = ({forecast}) => {
@@ -122,11 +123,12 @@ function App() {
 
   return (
     <div className="kotoapois">
+      {/* <div className="debug">Ennusteiden hakutilanne {forecastProcessingStatus}</div><br /> */}
       {(errored !== "") ?       
         <h1>Ennusteen haussa virhe :(</h1>        
         :        
         <>
-          <div>Ennusteiden hakutilanne {forecastProcessingStatus}</div><br />
+          <h1>Säätilanne ulkona seuraavan parin tunnin ajan</h1>
           <div className="weatherStatusData">
             {(forecastProcessingStatus === "processed") &&
               weatherDataList.map((forecastItem: ForecastModel, i:number) => <WeatherForeCastElement forecast={forecastItem} key={i} /> )              
