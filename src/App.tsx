@@ -13,16 +13,15 @@ import { WeatherIconDescriptions } from './components/weatherIconDescriptions';
 
 const kelloNyt = new Date();
 
-// TODO: Daylight savings, should we add it or just IDGAF?
+// TODO: Daylight savings, should we add it or just disregard them?
 const startTime: string = new Date(kelloNyt.getFullYear(), kelloNyt.getMonth(), kelloNyt.getDate(), kelloNyt.getHours()).toISOString() + "&";
 const stopTime: string = new Date(kelloNyt.getFullYear(), kelloNyt.getMonth(), kelloNyt.getDate(), kelloNyt.getHours() + 6).toISOString() + "&";
 
-// Everything is strings even though some values should be numbers but let's not get that gritty yet.
+// Everything is strings even though some values should be numbers but let's not care about it.
 const place: string = "geoid=843438&";
 const ennusteFMIParameters: string = "parameters=Precipitation1h,Temperature,WindDirection,WindSpeedMS,WindGust,WeatherSymbol3&";
 const ennusteBaseURL: string = "http://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::hirlam::surface::point::simple&";
-// eslint-disable-next-line no-useless-escape
-const forecastBreakPointIndex = ennusteFMIParameters.match(/(\,|\&)/g)?.length || 5;
+const forecastBreakPointIndex = ennusteFMIParameters.match(/(,|&)/g)?.length || 5;
 
 const WeatherForeCastElement: React.FC<{forecast:ForecastModel}> = ({forecast}) => {
   // The slice is for getting rid of the seconds since we don't need them.
@@ -54,7 +53,7 @@ function App() {
   const [weatherDataList, setWeatherDataList] = useState([] as Array<ForecastModel>);
   const [forecastProcessingStatus, setForecastProcessStatus] = useState("init" as string);
   const [forecastURLString, setForecastURLString] = useState("");
-  const [timeParameters, setTimeParameters] = useState({start:startTime, stop:stopTime});
+  const [timeParameters] = useState({start:startTime, stop:stopTime});
 
   useEffect(() => {
     const ennusteUrlString = ennusteBaseURL + place + "starttime=" + timeParameters.start + "endtime=" + timeParameters.stop + ennusteFMIParameters;
@@ -110,13 +109,12 @@ function App() {
         }
       });
     }).then(() => {
-      const badgedWeatherDatalist = forecastObjectHandler(weatherDataList);
-      return (badgedWeatherDatalist === null) ? weatherDataList : badgedWeatherDatalist;
-    }).then((handledWeatherDataList: ForecastModel[]) => {
+      forecastObjectHandler(weatherDataList);
+      setWeatherDataList(weatherDataList);
       setForecastProcessStatus("processed");
-      setWeatherDataList(handledWeatherDataList);
     }).catch((error: AxiosError) => {
       console.error("Sää ennusteen haku epäonnistui koska ", error);
+      setForecastProcessStatus("failed");
       setErroredStatus("Sää ennusteen haku epäonnistui");
     });    
   },[forecastURLString, weatherDataList, timeParameters]);
