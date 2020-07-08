@@ -1,11 +1,11 @@
 import ForecastModel from './models/forecastModel';
 
-// import * as _ from "lodash";
 type InfoBadge = {
     name: string;
     level: string;
     type: string;
 };
+
 function forecastObjectHandler(weatherDataList: Array<ForecastModel>): Array<ForecastModel> | null {
     // Just in case we got this 
     if (weatherDataList.length < 1) return null;

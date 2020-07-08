@@ -1,7 +1,6 @@
 export default class ForecastModel {
     constructor() {
       this.Temperature = "";
-
       this.WindDirection = "";
       this.BadgeList = [];
       this.WeatherSymbol3 = "";

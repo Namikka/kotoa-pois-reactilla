@@ -114,7 +114,7 @@ function App() {
       return (badgedWeatherDatalist === null) ? weatherDataList : badgedWeatherDatalist;
     }).then((handledWeatherDataList: ForecastModel[]) => {
       setForecastProcessStatus("processed");
-      setWeatherDataList(weatherDataList);
+      setWeatherDataList(handledWeatherDataList);
     }).catch((error: AxiosError) => {
       console.error("Sää ennusteen haku epäonnistui koska ", error);
       setErroredStatus("Sää ennusteen haku epäonnistui");

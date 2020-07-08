@@ -1,5 +1,4 @@
-export const WeatherIconDescriptions:Descriptions = {
-    
+export const WeatherIconDescriptions:Descriptions = {    
     "1": "Selkeää",
     "2": "Enimmäkseen selkeää",
     "3": "Pilvistä",
