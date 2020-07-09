@@ -67,5 +67,5 @@ stages:
               StartupCommand: 'npm run start'
               ScriptType: 'Inline Script'
               InlineScript: |
-                npm install --loglevel=error --no-update-notifier
+                npm install --loglevel=error
                 npm run build --if-present
