@@ -69,3 +69,12 @@ stages:
               InlineScript: |
                 npm install
                 npm run build --if-present
+          - task: CopyFiles@2
+            inputs:
+              Contents: 'build/**' # Pull the build directory (React)
+              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+              
+          - task: PublishBuildArtifacts@1
+            inputs: 
+              pathtoPublish: $(Build.ArtifactStagingDirectory) # dist or build files
+              ArtifactName: 'www' # output artifact named www
