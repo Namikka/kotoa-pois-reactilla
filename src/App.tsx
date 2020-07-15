@@ -20,7 +20,7 @@ const stopTime: string = new Date(kelloNyt.getFullYear(), kelloNyt.getMonth(), k
 // Everything is strings even though some values should be numbers but let's not care about it.
 const place: string = "geoid=843438&";
 const ennusteFMIParameters: string = "parameters=Precipitation1h,Temperature,WindDirection,WindSpeedMS,WindGust,WeatherSymbol3&";
-const ennusteBaseURL: string = "http://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::hirlam::surface::point::simple&";
+const ennusteBaseURL: string = "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::hirlam::surface::point::simple&";
 const forecastBreakPointIndex = ennusteFMIParameters.match(/(,|&)/g)?.length || 5;
 
 const WeatherForeCastElement: React.FC<{forecast:ForecastModel}> = ({forecast}) => {
