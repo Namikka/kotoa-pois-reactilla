@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/b8e6bce6-5635-4215-a5f3-30240640be39/resourceGroups/Resurssit01/providers/Microsoft.Web/sites/KotoaPois",
+    "appService.deploySubpath": "."
+}

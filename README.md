@@ -1,10 +1,13 @@
 # Kotoa pois, reactilla
-
+---
 Tells you what kind of weather outside is and what you should maybe wear.
 
 ## What is this all about?
 
 Instead of calculating the amount and type of clothing I need outside my house, I make the computer do it because I am human.
+
+## Status
+`Development`
 
 ## Available Scripts
 
