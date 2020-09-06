@@ -122,11 +122,19 @@ function App() {
   return (
     <div className="kotoapois">
       {/* <div className="debug">Ennusteiden hakutilanne {forecastProcessingStatus}</div><br /> */}
-      {(errored !== "") ?       
-        <h1>Ennusteen haussa virhe :(</h1>        
+      {(forecastProcessingStatus === "failed") ?
+      <div className="alert alert-danger" role="alert">
+        <h1>Ennusteen haussa virhe :(</h1>
+        <h2>{errored}</h2>      
+      </div>
         :        
         <>
-          <h1>Säätilanne ulkona seuraavan parin tunnin ajan</h1>
+          <h1>
+            {(forecastProcessingStatus === "loading") ? 
+              'Ennusteita haetaan ja käsitellään...' 
+            : 'Säätilanne ulkona seuraavan parin tunnin ajan'}
+            
+          </h1>
           <div className="weatherStatusData">
             {(forecastProcessingStatus === "processed") &&
               weatherDataList.map((forecastItem: ForecastModel, i:number) => <WeatherForeCastElement forecast={forecastItem} key={i} /> )              

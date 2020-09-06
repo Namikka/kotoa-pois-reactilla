@@ -5,7 +5,12 @@ type InfoBadge = {
     level: string;
     type: string;
 };
-
+/**
+// Return value commented now because I don't want VisualStudioCode to be annoying
+function clothingBadgeGenerator (weatherDataObject: ForecastModel) { //: Array<InfoBadge> { 
+    
+}
+ */
 function forecastObjectHandler(weatherDataList: Array<ForecastModel>): Array<ForecastModel> | null {
     // Just in case we got this 
     if (weatherDataList.length < 1) return null;
