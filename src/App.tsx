@@ -123,7 +123,7 @@ function App() {
     <div className="kotoapois">
       {/* <div className="debug">Ennusteiden hakutilanne {forecastProcessingStatus}</div><br /> */}
       {(forecastProcessingStatus === "failed") ?
-      <div className="alert alert-danger" role="alert">
+        <div className="alert alert-danger" role="alert">
         <h1>Ennusteen haussa virhe :(</h1>
         <h2>{errored}</h2>      
       </div>
