@@ -1,17 +1,35 @@
 import React from 'react';
-import { getByTitle, render } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import App from './App';
 
-test('Gets forecasts', () => {
+const forecastItemsLength = 5;
+const loadingText = "Ennusteita haetaan ja käsitellään...";
+const failedText = "Ennusteen haussa virhe :(";
+const successText = "Säätilanne ulkona seuraavan parin tunnin ajan";
+
+
+test('Generates app', () => {
   const { getByText } = render(<App />);
-  const errorMessage = getByText(/Ennusteen haussa virhe/i);
-  expect(errorMessage).not.toBeInTheDocument();
+  const errorMessage = getByText(loadingText);
+  expect(errorMessage).toBeInTheDocument();
 });
 
-test('Lists forecasts', () => {
-  const { renderedApp } = render(<App />);
-  const forecastItemContainerClass = "weatherStatusData";
+// Help from here: https://medium.com/rd-shipit/testing-asynchronous-code-with-jest-and-testing-library-react-cfc185d7bd78
+// and also here: https://www.polvara.me/posts/how-to-test-asynchronous-methods/
+
+test('Generates complete list of forecasts', async () => {
+  const { container } = render(<App />);
+  await waitFor(() => { container.querySelectorAll('[class="weatherStatus"]') }).then(() => {
+
+    const forecastItemContainerClass = container.querySelectorAll('[class="weatherStatus"]');// findByPlaceholderText("weatherStatusData");
+    expect(forecastItemContainerClass.length).toEqual(forecastItemsLength);
+  }).catch( () => {
+    
+  });
   
-  //<img className="weatherIcon" alt={WeatherIconDescriptions[forecast.WeatherSymbol3]} src={weatherIconSrc}></img>
-  expect(renderedApp).toContainElement() 
+//   const { container } = render(<App />);
+//   const forecastItemContainerClass = container.querySelectorAll('[class="weatherStatus"]');// findByPlaceholderText("weatherStatusData");
+//   expect(forecastItemContainerClass.length).toEqual(forecastItemsLength);
 });
+
+// test for images to be loaded
