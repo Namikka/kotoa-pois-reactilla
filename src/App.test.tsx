@@ -19,12 +19,15 @@ test('Generates app', () => {
 
 test('Generates complete list of forecasts', async () => {
   const { container } = render(<App />);
-  await waitFor(() => { container.querySelectorAll('[class="weatherStatus"]') }).then(() => {
-
+  await waitFor(() => { 
+    container.querySelectorAll('[class="weatherStatus"]') 
+  }).then(() => {
     const forecastItemContainerClass = container.querySelectorAll('[class="weatherStatus"]');// findByPlaceholderText("weatherStatusData");
     expect(forecastItemContainerClass.length).toEqual(forecastItemsLength);
-  }).catch( () => {
-    
+  }).catch((failure:any) => {
+    console.error("Generates complete list of forecasts failed.");
+    console.error("Reason: ", failure);
+    return false;
   });
   
 //   const { container } = render(<App />);
