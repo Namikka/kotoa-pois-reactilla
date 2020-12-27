@@ -1,0 +1,109 @@
+@weather-icon-size: 150px;
+@phone: 576px;
+@tablet: 768px;
+@small-desktop: 992px;
+@big-desktop: 1200px;
+
+body {
+	background-color: darkgray;
+}
+
+h1, h2 {
+	text-align: center;
+}
+
+.kotoapois {
+	width: 100%;
+
+	@media(min-width: @phone) {
+		margin: 15px auto;
+	}
+
+	@media(min-width: @tablet) {
+		width: 70vw;
+	}
+
+	@media(min-width: @small-desktop) {
+		width: 60vw;
+	}
+
+	@media(min-width: @big-desktop) {
+		width: 50vw;
+	}
+
+}
+
+.weatherStatusData {
+	float: left;
+	width: 100%;
+	background-color: ivory;
+	border-radius: 10px;
+	padding: 10px;
+
+	h2 {
+		text-align: center;
+		font-size: 2em;
+	}
+
+	.weatherStatus {
+		float: left;
+		clear: both;
+		width: 100%;
+		border-bottom: 2px solid #0a95d7;
+		padding: 10px 0;
+
+		&:last-child {
+			border-bottom: 0;
+		}
+
+		.weatherIconContainer,
+		.weatherInfo,
+		.weatherBadges {
+			float: left;
+		}
+
+		.weatherInfo, .weatherBadges {
+			padding: 5px 0;
+			width: 75%;
+
+			@media(min-width: @phone) {
+				padding: 10px 0;
+				width: 70%;
+			}
+
+			p {
+				margin-bottom: 0;
+			}
+		}
+
+		.weatherIconContainer {
+			text-align: center;
+			width: 25%;
+
+			@media(min-width: @phone) {
+				width: 30%;
+			}
+
+			.weatherIcon {
+				width: @weather-icon-size / 2;
+				height: @weather-icon-size / 2;
+
+				@media(min-width: @phone) {
+					width: @weather-icon-size;
+					height: @weather-icon-size;
+				}
+			}
+		}
+
+		.weatherBadges {
+			.badge {
+				margin: 4px 4px 4px 0;
+				font-size: 1rem;
+
+				@media(min-width: @phone) {
+					padding: 15px;
+				}
+			}
+		}
+	}
+}
